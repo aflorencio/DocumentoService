@@ -7,9 +7,11 @@ using System.Web;
 
 namespace DocumentoService.Core.DB.Models
 {
+    [BsonIgnoreExtraElements]
     public class DocumentoDBModel
     {
         public ObjectId _id { get; set; }
+        [BsonIgnoreIfNull]
         public ObjectId contactoService { get; set; }
         [BsonIgnoreIfNull]
         public ObjectId ticketService { get; set; }
@@ -24,9 +26,9 @@ namespace DocumentoService.Core.DB.Models
         [BsonIgnoreIfNull]
         public List<string> tags { get; set; }
         [BsonIgnoreIfNull]
-        public int acceso { get; set; }
+        public int? acceso { get; set; }
         [BsonIgnoreIfNull]
-        public bool visible { get; set; } = true;
+        public bool visible { get; set; }
     }
 
 }

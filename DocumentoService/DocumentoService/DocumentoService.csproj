@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DocumentoController.cs" />
     <Compile Include="Core\DB\Models\DocumentoDBModel.cs" />
     <Compile Include="Core\DB\Query\DocumentoQuery.cs" />
     <Compile Include="Core\MainCore.cs" />
@@ -124,7 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Core\Lib\" />
     <Folder Include="Core\Models\" />
     <Folder Include="Models\" />
@@ -144,7 +144,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63556</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63556/</IISUrl>
+          <IISUrl>http://localhost:5004/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
