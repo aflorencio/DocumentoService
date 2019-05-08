@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace DocumentoService.Controllers
@@ -43,6 +45,9 @@ namespace DocumentoService.Controllers
         public async Task<HttpResponseMessage> Post(HttpRequestMessage request)
         {
             var jsonString = await request.Content.ReadAsStringAsync();
+            var otro = request.Headers;
+            var requestt = HttpContext.Current.Request;
+            var fileName = requestt.Headers["algo"];
 
             Core.DB.Models.DocumentoDBModel account = JsonConvert.DeserializeObject<Core.DB.Models.DocumentoDBModel>(jsonString);
             _.CrearPresupuesto(account);
@@ -86,5 +91,112 @@ namespace DocumentoService.Controllers
         }
 
         #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [Route("api/Documento/upload")]
+               //public string Upload()
+        //{
+        //    try
+        //    {
+        //        var request = HttpContext.Current.Request;
+        //        var fileName = request.Headers["filename"];
+        //        var filePath = request.Headers["path"];
+        //        var fullPath = HttpContext.Current.Server.MapPath(@"~\" + filePath + @"\" + fileName);
+
+        //        using (var fs = new FileStream(fullPath, FileMode.Create))
+        //        {
+        //            request.InputStream.CopyTo(fs);
+        //        }
+
+        //        return "File " + fileName + " uploaded successfully";
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        return "File upload failed";
+        //    }
+
+        //}
+
+
+        //public async Task<HttpResponseMessage> PostUserImage()
+        //{
+        //    Dictionary<string, object> dict = new Dictionary<string, object>();
+        //    try
+        //    {
+        //        var httpRequest = HttpContext.Current.Request;
+
+        //        foreach (string file in httpRequest.Files)
+        //        {
+        //            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+
+        //            var postedFile = httpRequest.Files[file];
+        //            if (postedFile != null && postedFile.ContentLength > 0)
+        //            {
+
+        //                int MaxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+
+        //                IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
+        //                var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+        //                var extension = ext.ToLower();
+        //                if (!AllowedFileExtensions.Contains(extension))
+        //                {
+
+        //                    var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+
+        //                    dict.Add("error", message);
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+        //                }
+        //                else if (postedFile.ContentLength > MaxContentLength)
+        //                {
+
+        //                    var message = string.Format("Please Upload a file upto 1 mb.");
+
+        //                    dict.Add("error", message);
+        //                    return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+        //                }
+        //                else
+        //                {
+
+
+
+        //                    var filePath = HttpContext.Current.Server.MapPath("~/Userimage/" + postedFile.FileName + extension);
+
+        //                    postedFile.SaveAs(filePath);
+
+        //                }
+        //            }
+
+        //            var message1 = string.Format("Image Updated Successfully.");
+        //            return Request.CreateErrorResponse(HttpStatusCode.Created, message1); ;
+        //        }
+        //        var res = string.Format("Please Upload a image.");
+        //        dict.Add("error", res);
+        //        return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var res = string.Format("some Message");
+        //        dict.Add("error", res);
+        //        return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+        //    }
+        //}
+
     }
 }
+
