@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -162,16 +163,25 @@ namespace DocumentoService.Controllers
                             var filePath = HttpContext.Current.Server.MapPath("~/Userimage/" + postedFile.FileName + extension); //Para almacenarlo en la dir del proyecto de forma virtual
                             var filePath2 = @"C:\DocumentoService_file" + userId + directory + @"\" + postedFile.FileName + extension; // Para almacenarlo en una direccion fisica de forma fisica ejemplo en C
 
+                            postedFile.SaveAs(filePath2);
+                            ObjectId fileRandID = ObjectId.GenerateNewId();
+
+                            var renameAsDirectory = @"C:\DocumentoService_file" + userId + directory + @"\" + fileRandID.ToString() + extension;
+
+                            File.Move(@"C:\DocumentoService_file" + userId + directory + @"\" + postedFile.FileName + extension, renameAsDirectory);
+
                             #region LLamadas de DB
                             DBModel data = new DBModel();
-                            data.directorio = userId + directory + @"\";
-                            data.nombre = postedFile.FileName;
+                            data._id = fileRandID;
+                            data.directorio = renameAsDirectory;
+                            data.nombre = HttpContext.Current.Request.Headers["nombre"] ==  null ? "SinTitulo" : HttpContext.Current.Request.Headers["nombre"];
                             data.extension = extension;
                             data.fechaCreacion = DateTime.Now;
+                            data.visible = true;
+                            data.acceso = 2;
                             _.Create(data);
                             #endregion
 
-                            postedFile.SaveAs(filePath2);
 
                         }
                     }

@@ -38,7 +38,15 @@ namespace DocumentoService.Core.DB.Query
 
         public List<DBModel> ReadAll()
         {
+            try
+            {
+
             return _Collection.Find(new BsonDocument()).ToList();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public DBModel ReadById(string id)
@@ -49,7 +57,7 @@ namespace DocumentoService.Core.DB.Query
                 var data = _Collection.Find(filter).FirstOrDefault();
                 return data;
             }
-            catch
+            catch(Exception e)
             {
                 return null;
             }
