@@ -9,11 +9,11 @@ namespace DocumentoService.Core
     {
         #region CREATE
 
-        public void CrearPresupuesto(DB.Models.DocumentoDBModel data)
+        public void Create(DB.Models.DocumentoDBModel data)
         {
 
             DB.Query.DocumentoQuery qCreate = new DB.Query.DocumentoQuery("mongodb://51.83.73.69:27017");
-            qCreate.CrearDocumento(data);
+            qCreate.Create(data);
 
         }
 
@@ -25,7 +25,7 @@ namespace DocumentoService.Core
         {
             DB.Query.DocumentoQuery qReadAll = new DB.Query.DocumentoQuery("mongodb://51.83.73.69:27017");
 
-            return qReadAll.GetAllDocumento();
+            return qReadAll.ReadAll();
         }
 
         public Core.DB.Models.DocumentoDBModel ReadId(string id)
@@ -33,7 +33,7 @@ namespace DocumentoService.Core
 
             DB.Query.DocumentoQuery qReadId = new DB.Query.DocumentoQuery("mongodb://51.83.73.69:27017");
 
-            var data = qReadId.GetDocumentoById(id);
+            var data = qReadId.ReadById(id);
             return data;
         }
 
@@ -57,7 +57,7 @@ namespace DocumentoService.Core
         {
 
             DB.Query.DocumentoQuery qUpdate = new DB.Query.DocumentoQuery("mongodb://51.83.73.69:27017");
-            qUpdate.UpdateDocumento(id, updateFieldName, updateFieldValue);
+            qUpdate.Update(id, updateFieldName, updateFieldValue);
 
         }
 
@@ -68,7 +68,7 @@ namespace DocumentoService.Core
         public void Delete(string id)
         {
             DB.Query.DocumentoQuery qDelete = new DB.Query.DocumentoQuery("mongodb://51.83.73.69:27017");
-            qDelete.DeleteDocumentoById(id);
+            qDelete.DeleteById(id);
         }
 
         #endregion

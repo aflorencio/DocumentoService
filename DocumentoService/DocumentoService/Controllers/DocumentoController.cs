@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
+using DBModel = DocumentoService.Core.DB.Models.DocumentoDBModel;
+
+
 namespace DocumentoService.Controllers
 {
     public class DocumentoController : ApiController
@@ -45,12 +48,15 @@ namespace DocumentoService.Controllers
         public async Task<HttpResponseMessage> Post(HttpRequestMessage request)
         {
             var jsonString = await request.Content.ReadAsStringAsync();
+
+            #region Lectura de Headers
             var otro = request.Headers;
             var requestt = HttpContext.Current.Request;
             var fileName = requestt.Headers["algo"];
+            #endregion
 
             Core.DB.Models.DocumentoDBModel account = JsonConvert.DeserializeObject<Core.DB.Models.DocumentoDBModel>(jsonString);
-            _.CrearPresupuesto(account);
+            _.Create(account);
 
             // return "OK!";
             return new HttpResponseMessage(HttpStatusCode.Created);
@@ -111,6 +117,8 @@ namespace DocumentoService.Controllers
         [Route("api/Documento/upload")]
         public async Task<HttpResponseMessage> PostUserImage()
         {
+
+            // AUTH IRA AQUI PARA COMPROBAR SI EL CONTACTO PUEDE SUBUIR ARCHIVOS O NO, EL NIVEL DE ACCESO, TIPO Y BASICAMENTE QUIEN ES.
             Dictionary<string, object> dict = new Dictionary<string, object>();
             try
             {
@@ -148,9 +156,20 @@ namespace DocumentoService.Controllers
                         else
                         {
 
-                            var filePath = HttpContext.Current.Server.MapPath("~/Userimage/" + postedFile.FileName + extension); //Para almacenarlo en la dir del proyecto de forma virtual
-                            var filePath2 = @"C:\Userimage\" + postedFile.FileName + extension; // Para almacenarlo en una direccion fisica de forma fisica ejemplo en C
+                            var userId = @"\0";
+                            var directory = @"\private";
 
+                            var filePath = HttpContext.Current.Server.MapPath("~/Userimage/" + postedFile.FileName + extension); //Para almacenarlo en la dir del proyecto de forma virtual
+                            var filePath2 = @"C:\DocumentoService_file" + userId + directory + @"\" + postedFile.FileName + extension; // Para almacenarlo en una direccion fisica de forma fisica ejemplo en C
+
+                            #region LLamadas de DB
+                            DBModel data = new DBModel();
+                            data.directorio = userId + directory + @"\";
+                            data.nombre = postedFile.FileName;
+                            data.extension = extension;
+                            data.fechaCreacion = DateTime.Now;
+                            _.Create(data);
+                            #endregion
 
                             postedFile.SaveAs(filePath2);
 

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
+using DBModel = DocumentoService.Core.DB.Models.DocumentoDBModel;
+
 namespace DocumentoService.Core.DB.Query
 {
     
@@ -14,37 +16,37 @@ namespace DocumentoService.Core.DB.Query
     {
         private IMongoClient _client;
         private IMongoDatabase _database;
-        private IMongoCollection<DB.Models.DocumentoDBModel> _presupuestoCollection;
+        private IMongoCollection<DBModel> _Collection;
 
         public DocumentoQuery(string connectionString)
         {
             _client = new MongoClient(connectionString);
             _database = _client.GetDatabase("DocumentoService");
-            _presupuestoCollection = _database.GetCollection<DB.Models.DocumentoDBModel>("documentos");    
+            _Collection = _database.GetCollection<DBModel>("documento");    
         }
 
         #region CREATE
 
-        public async Task CrearDocumento(DB.Models.DocumentoDBModel documento) //CREATE
+        public async Task Create(DBModel documento) //CREATE
         {
-            await _presupuestoCollection.InsertOneAsync(documento);
+            await _Collection.InsertOneAsync(documento);
         }
 
         #endregion
 
         #region READ
 
-        public List<DB.Models.DocumentoDBModel> GetAllDocumento()
+        public List<DBModel> ReadAll()
         {
-            return _presupuestoCollection.Find(new BsonDocument()).ToList();
+            return _Collection.Find(new BsonDocument()).ToList();
         }
 
-        public DB.Models.DocumentoDBModel GetDocumentoById(string id)
+        public DBModel ReadById(string id)
         {
             try
             {
-                var filter = Builders<DB.Models.DocumentoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-                var data = _presupuestoCollection.Find(filter).FirstOrDefault();
+                var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+                var data = _Collection.Find(filter).FirstOrDefault();
                 return data;
             }
             catch
@@ -57,12 +59,12 @@ namespace DocumentoService.Core.DB.Query
 
         #region UPDATE
 
-        public bool UpdateDocumento(string id, string udateFieldName, string updateFieldValue)
+        public bool Update(string id, string udateFieldName, string updateFieldValue)
         {
-            var filter = Builders<DB.Models.DocumentoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<DB.Models.DocumentoDBModel>.Update.Set(udateFieldName, updateFieldValue);
+            var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<DBModel>.Update.Set(udateFieldName, updateFieldValue);
 
-            var result = _presupuestoCollection.UpdateOne(filter, update);
+            var result = _Collection.UpdateOne(filter, update);
 
             return result.ModifiedCount != 0;
         }
@@ -71,10 +73,10 @@ namespace DocumentoService.Core.DB.Query
 
         #region DELETE
 
-        public bool DeleteDocumentoById(string id)
+        public bool DeleteById(string id)
         {
-            var filter = Builders<DB.Models.DocumentoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-            var result = _presupuestoCollection.DeleteOne(filter);
+            var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+            var result = _Collection.DeleteOne(filter);
             return result.DeletedCount != 0;
         }
 
